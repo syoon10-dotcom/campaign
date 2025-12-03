@@ -294,11 +294,12 @@ p.lead {
 }
 
 @keyframes floatUp {
-  0%   { transform: translateY(0); opacity: 0; }
+  0%   { transform: translateY(10%); opacity: 0; }   /* 살짝 아래에서 시작 */
   10%  { opacity: 1; }
-  80%  { opacity: 1; }
-  100% { transform: translateY(-140%); opacity: 0; }
+  70%  { opacity: 1; }
+  100% { transform: translateY(-230%); opacity: 0; } /* 훨씬 더 위까지 올라가게 */
 }
+
 
 /* 예시 댓글들 위치 */
 /* 예시 댓글들 위치 재조정 — 전체적으로 가운데에 맞추기 */
@@ -714,8 +715,11 @@ button.choice-btn {
     chip.className = "comment-chip pixel-chip user-chip";
     chip.textContent = text;
 
-    const startTop = 80 + Math.random() * 20;   // 80% ~ 100%
-    const startLeft = 5 + Math.random() * 90;   // 5% ~ 95%
+    const startTop = 80 + Math.random() * 15;   // 80% ~ 95% (조금만 아래에서 시작)
+  const spread = 22;                          // 중앙에서 ±22%
+  const randomOffset = (Math.random() * 2 - 1) * spread; // -22 ~ +22
+  const startLeft = 50 + randomOffset;        // 28% ~ 72%
+
 
     chip.style.top = startTop + "%";
     chip.style.left = startLeft + "%";
@@ -732,14 +736,27 @@ button.choice-btn {
     if (e.key === "Enter") addUserComment();
   });
 
-  // 페이지 로드 후, 기존 예시 댓글들 속도도 랜덤 부여
   window.addEventListener("load", () => {
-    const chips = document.querySelectorAll(".comment-shape .comment-chip");
-    chips.forEach(chip => {
-      const duration = 5 + Math.random() * 4; // 5 ~ 9초
-      chip.style.animationDuration = duration.toFixed(2) + "s";
-    });
+  const chips = document.querySelectorAll(".comment-shape .comment-chip");
+
+  chips.forEach(chip => {
+    // 1) 떠오르는 시간 랜덤
+    const duration = 5 + Math.random() * 4; // 5 ~ 9초
+    chip.style.animationDuration = duration.toFixed(2) + "s";
+
+    // 2) 시작 위치: 아래쪽 근처(top 70~95%)
+    const startTop = 70 + Math.random() * 25; // 70% ~ 95%
+    chip.style.top = startTop + "%";
+
+    // 3) X 위치: 중앙(50%)를 기준으로 좌우로 ±25% 퍼지기
+    //    → 25% ~ 75% 사이 (폰에서도 항상 가운데 근처)
+    const spread = 25;
+    const randomOffset = (Math.random() * 2 - 1) * spread; // -25 ~ +25
+    const left = 50 + randomOffset;
+    chip.style.left = left + "%";
   });
+});
+
 
   // 실루엣 카드 3D 인터랙션
   const silhouetteCard = document.getElementById("silhouetteCard");
