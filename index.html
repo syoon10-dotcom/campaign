@@ -445,6 +445,19 @@ p.lead {
   pointer-events: none;
   transition: opacity 0.18s ease-out;
 }
+.tap-hint {
+  margin-top: 1.6rem;
+  font-size: 0.75rem;
+  text-align: center;
+  opacity: 0.7;
+  animation: hintPulse 1.6s ease-in-out infinite;
+  color: var(--pixel-main);
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 1; }
+}
 
 .real-card:hover .real-overlay {
   opacity: 1;
@@ -455,6 +468,7 @@ p.lead {
   font-size: 0.75rem;
   line-height: 1.6;
 }
+
 
 
 /* 4. CHOICE */
@@ -621,12 +635,18 @@ button.choice-btn {
         Someone reads them, remembers them, and carries them.
       </div>
     </div>
+    
 
     <div class="real-card">
+      <div class="tap-hint pixel">
+        Tap to see how it feels
+      </div>
+      <br>
       <div class="real-face">
         <div class="real-eye left"></div>
         <div class="real-eye right"></div>
       </div>
+      
 
       <div class="real-comment-list">
         <span>&ldquo;why do u even try?&rdquo;</span>
@@ -640,8 +660,10 @@ button.choice-btn {
         </div>
       </div>
     </div>
+    
   </div>
 </section>
+
 
     
 
