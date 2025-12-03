@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Behind the Screen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- 폰트: 기본 + 픽셀폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+:root {
+  /* TERMINAL / AI / INTERNET PALETTE – dark gray ver. */
+
+  /* 전체 기본 배경 (사이트 바탕) */
+  --bg-main: #07090f;          /* 완전 블랙 대신, 살짝 파랑 섞인 짙은 다크그레이 */
+
+  /* 섹션별 배경 */
+  --intro-bg: #090b12;         /* 첫 화면 */
+  --chaos-bg: #080a11;         /* 악플 폭주 섹션 */
+  --real-bg: #05070d;          /* 실루엣 섹션 – 여전히 가장 어두운 영역 */
+  --choice-bg: #090b10;        /* 선택 섹션 */
+
+  /* 텍스트 색 */
+  --text-color-light: #F5F7FF;
+  --text-color-muted: #B0B4C0;
+  --text-color-strong: #FFFFFF;
+
+  /* 네온 그린 (픽셀 텍스트, 핵심 슬로건) */
+  --pixel-main: #7CFF4F;
+  --pixel-soft: #A8FF72;
+
+  /* 경고/위험 색 */
+  --warning-red: #FF3360;
+
+  /* 보조 딥 네이비 (버튼, 라인 등) */
+  --accent: #001E3C;
+}
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "IBM Plex Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-color-light);
+  background:
+    radial-gradient(circle at top left, #111522 0%, transparent 55%),
+    radial-gradient(circle at bottom right, #05070d 0%, transparent 60%),
+    var(--bg-main);
+  scroll-behavior: smooth;
+}
+
+.pixel {
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pixel-main); /* 기본 픽셀 텍스트 색 */
+}
+
+section {
+  min-height: 100vh;
+  padding: 3rem 6vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.section-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h1, h2 {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+p.lead {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 38rem;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+  opacity: 0.7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.scroll-hint span.arrow {
+  animation: bounce 1.2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* 1. INTRO */
+#intro {
+  background: var(--intro-bg);
+  color: var(--text-color-light);
+}
+
+.hero-screen {
+  margin-top: 2rem;
+  padding: 3rem 2rem;
+  border-radius: 1.2rem;
+  background:
+    radial-gradient(circle at top, rgba(124,255,79,0.18) 0%, transparent 55%),
+    linear-gradient(180deg, #050b10 0%, #020407 100%);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(124, 255, 79, 0.3); /* 모니터 테두리 느낌 */
+}
+
+.hero-line {
+  font-size: 1.1rem;
+  font-weight: 400;
+  text-align: center;
+  color: var(--pixel-main);
+  text-shadow: 0 0 8px rgba(124, 255, 79, 0.6); /* 네온 글로우 살짝 */
+}
+
+.hero-sub {
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.typing {
+  margin-top: 2rem;
+  padding: 0.9rem 1.1rem;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--text-color-muted);
+}
+
+.user-input-wrap input {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(124,255,79,0.4);
+  min-width: 230px;
+  font-size: 0.9rem;
+  outline: none;
+  background: #05080d;
+  color: var(--text-color-light);
+}
+.user-input-wrap input::placeholder {
+  color: var(--text-color-muted);
+}
+
+.cursor {
+  width: 8px;
+  height: 1.1rem;
+  background: var(--accent);
+  animation: blink 0.7s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.user-input-wrap {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.user-input-wrap input {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.2);
+  min-width: 230px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.user-input-wrap button {
+  border-radius: 999px;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--accent);
+  color: var(--text-color-light);
+  box-shadow: 0 8px 18px rgba(0,30,60,0.35);
+  transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.user-input-wrap button:hover {
+  background: #003366;
+}
+
+.user-input-wrap button:active {
+  transform: scale(0.97);
+}
+
+.input-note {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* 2. CHAOS */
+#chaos {
+  background: var(--chaos-bg);
+  color: var(--text-color-light);
+  overflow: hidden;
+}
+
+.chaos-grid {
+  margin-top: 2rem;
+  position: relative;
+  height: 50vh;
+  max-width: 900px;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,51,96,0.25) 0%, transparent 55%),
+    radial-gradient(circle at 80% 100%, rgba(124,255,79,0.18) 0%, transparent 55%),
+    linear-gradient(135deg, #04050a, #070b11);
+}
+
+/* 댓글들이 떠다니는 영역 */
+.comment-shape {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: none;
+}
+
+.comment-chip {
+  position: absolute;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.85);                  /* 기본: 검정 말풍선 */
+  color: var(--text-color-light);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.7);
+  border: 1px solid rgba(255,51,96,0.6);            /* 기본: 핑크/레드 테두리 */
+  animation-name: floatUp;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  white-space: nowrap;
+}
+
+/* 사용자가 직접 쓴 댓글: 네온 그린 + 더 튀는 느낌 */
+.user-chip {
+  background: rgba(124,255,79,0.14);
+  border-color: rgba(124,255,79,0.9);
+  color: var(--pixel-main);
+  box-shadow: 0 0 16px rgba(124,255,79,0.6);
+}
+
+/* pixel 스타일 */
+.pixel-chip {
+  font-family: "Press Start 2P", system-ui, sans-serif;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(0); opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(-140%); opacity: 0; }
+}
+
+/* 예시 댓글들 위치 */
+.c1 { top: 80%; left: 10%; }
+.c2 { top: 60%; left: 40%; }
+.c3 { top: 70%; left: 70%; }
+.c4 { top: 90%; left: 25%; }
+.c5 { top: 50%; left: 55%; }
+.c6 { top: 85%; left: 75%; }
+.c7 { top: 65%; left: 18%; }
+.c8 { top: 40%; left: 48%; }
+.c9 { top: 95%; left: 63%; }
+.c10{ top: 30%; left: 82%; }
+.c11{ top: 75%; left: 33%; }
+.c12{ top: 55%; left: 52%; }
+
+.chaos-caption {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.chaos-quote {
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* 3. REALIZATION – simpler, clearer face */
+#realization {
+  background: var(--real-bg);
+  color: var(--text-color-light);
+}
+
+.real-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+
+@media (max-width: 800px) {
+  .real-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.real-message {
+  font-size: 1rem;
+  margin-top: 2rem;      /* 위 문장과 거리 늘림 */
+  margin-bottom: 2rem;   /* 아래 문장과 거리 늘림 */
+  line-height: 1.4;      /* 픽셀 글자 여백 더 넉넉하게 */
+}
+
+.real-sub {
+  font-size: 0.96rem;
+  line-height: 1.6;
+  opacity: 0.82;
+}
+
+/* 오른쪽 카드 전체 */
+.real-card {
+  position: relative;
+  border-radius: 1.4rem;
+  padding: 2rem 2.2rem;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(124,255,79,0.2) 0%, transparent 55%),
+    radial-gradient(circle at 90% 100%, rgba(255,51,96,0.18) 0%, transparent 60%),
+    linear-gradient(145deg, #05070d, #090c15);
+  border: 1px solid rgba(245,247,255,0.16);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.85);
+  overflow: hidden;
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease-out;
+}
+
+.real-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 60px rgba(0,0,0,0.95);
+}
+
+/* 얼굴 (프로필 느낌) */
+.real-face {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 1.2rem auto;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(245,247,255,0.9) 0%, rgba(245,247,255,0.1) 45%, transparent 70%),
+    radial-gradient(circle at 50% 90%, rgba(0,0,0,0.9) 0%, transparent 60%);
+  border: 1px solid rgba(245,247,255,0.4);
+  box-shadow:
+    0 0 24px rgba(0,0,0,0.9),
+    0 0 30px rgba(124,255,79,0.18);
+}
+
+/* 눈 두 개 */
+.real-eye {
+  position: absolute;
+  top: 48%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, #ffffff 0%, transparent 45%),
+    radial-gradient(circle at 50% 60%, #000000 0%, #000000 60%, transparent 70%);
+  box-shadow: 0 0 8px rgba(0,0,0,0.7);
+}
+
+.real-eye.left {
+  left: 36%;
+}
+
+.real-eye.right {
+  right: 36%;
+}
+
+/* 아래 악플 텍스트 */
+.real-comment-list {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  opacity: 0.9;
+  color: var(--text-color-muted);
+  text-align: center;
+}
+
+.real-comment-list span {
+  display: block;
+}
+
+/* hover 시에 드러나는 overlay 메시지 */
+.real-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.9) 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease-out;
+}
+
+.real-card:hover .real-overlay {
+  opacity: 1;
+}
+
+.real-overlay-text {
+  max-width: 16rem;
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+
+/* 4. CHOICE */
+#choice {
+  background: var(--choice-bg);
+  color: var(--text-color-light);
+}
+
+.choice-box {
+  margin-top: 2rem;
+  padding: 2rem 2.2rem;
+  border-radius: 1.2rem;
+  background: white;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.12);
+}
+
+.choice-buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+button.choice-btn {
+  border-radius: 999px;
+  border: none;
+  padding: 0.7rem 1.3rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+}
+
+#btn-report {
+  background: var(--pixel-main);
+  color: #041003;
+  box-shadow: 0 10px 20px rgba(124,255,79,0.35);
+}
+#btn-report:hover {
+  background: var(--pixel-soft);
+}
+
+#btn-repeat {
+  background: transparent;
+  color: var(--warning-red);
+  border: 1px solid var(--warning-red);
+}
+#btn-repeat:hover {
+  background: rgba(255,51,96,0.14);
+}
+
+.final-message {
+  margin-top: 1.6rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.final-message.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.final-sub {
+  margin-top: 0.7rem;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.warning-note {
+  margin-top: 1.2rem;
+  font-size: 0.8rem;
+  color: #AA1A1A;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.warning-note.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+  </style>
+</head>
+<body>
+
+<!-- 1. INTRO – no explanation, just freedom -->
+<section id="intro">
+  <div class="section-inner">
+    <div class="hero-screen">
+      <div class="hero-line pixel">YOU CAN SAY ANYTHING HERE.</div>
+
+      <div class="user-input-wrap">
+        <input id="userComment" type="text" placeholder="type anything here">
+        <button id="sendComment">Send</button>
+      </div>
+      <div class="input-note">
+        nothing will be saved. just type whatever comes to mind.
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>scroll to see what your words do</span>
+    <span class="arrow">↓</span>
+  </div>
+</section>
+
+<!-- 2. CHAOS -->
+<section id="chaos">
+  <div class="section-inner">
+    <h2>When words start to pile up.</h2>
+    <p class="lead">
+      Comments multiply, spread, and overlap. Anonymity makes it easy to forget there is someone on the other side.
+    </p>
+
+    <div class="chaos-grid" id="chaosGrid">
+      <div class="comment-shape">
+        <!-- 기존 예시 댓글들 (기본 색) -->
+        <div class="comment-chip c1">why do u even try?</div>
+        <div class="comment-chip c2">no one cares lol</div>
+        <div class="comment-chip c3">you look disgusting</div>
+        <div class="comment-chip c4">ㅋㅋㅋㅋㅋㅋ</div>
+        <div class="comment-chip c5">just disappear</div>
+        <div class="comment-chip c6">stop embarrassing yourself</div>
+
+        <!-- 더 많은 예시 댓글 -->
+        <div class="comment-chip c7">no one wants you here</div>
+        <div class="comment-chip c8">so cringe omg</div>
+        <div class="comment-chip c9">go away lol</div>
+        <div class="comment-chip c10">who do you think you are</div>
+        <div class="comment-chip c11">그냥 없어져</div>
+        <div class="comment-chip c12">wtf is this</div>
+      </div>
+    </div>
+
+    <p class="chaos-quote pixel">
+      “CRUELTY TRAVELS FASTER THAN CARE.”
+    </p>
+    <p class="chaos-caption">
+      Negative content spreads quickly, and once posted, it&#39;s hard to take back.
+    </p>
+  </div>
+</section>
+
+<!-- 3. REALIZATION – simpler, clearer face card -->
+<section id="realization">
+  <div class="section-inner real-layout">
+    <div>
+      <h2>The person behind the screen.</h2>
+      <p class="lead">
+        At some point, we recognize that these aren&#39;t just pixels. Every comment lands on a real person.
+      </p>
+
+      <div class="real-message pixel">
+        BEHIND EVERY SCREEN IS A REAL PERSON.
+      </div>
+      <div class="real-sub">
+        These comments don&#39;t just stay on the screen.  
+        Someone reads them, remembers them, and carries them.
+      </div>
+    </div>
+
+    <div class="real-card">
+      <div class="real-face">
+        <div class="real-eye left"></div>
+        <div class="real-eye right"></div>
+      </div>
+
+      <div class="real-comment-list">
+        <span>&ldquo;why do u even try?&rdquo;</span>
+        <span>&ldquo;no one cares lol&rdquo;</span>
+        <span>&ldquo;그냥 없어져&rdquo;</span>
+      </div>
+
+      <div class="real-overlay">
+        <div class="real-overlay-text pixel">
+          IT HURTS EVEN IF YOU CAN&#39;T SEE ME.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    
+
+<!-- 4. CHOICE -->
+<section id="choice">
+  <div class="section-inner">
+    <h2>What do you do next?</h2>
+    <p class="lead">
+      We can scroll past, join in, or interrupt the pattern.  
+      <br>Online, the smallest action can shift the culture.
+    </p>
+
+    <div class="choice-box">
+      <p style="color:#000; opacity:1;">
+        Imagine you see comments like these on someone's post.  
+        You are not the target — but you are there.
+      </p>
+
+      <div class="choice-buttons">
+        <button id="btn-report" class="choice-btn pixel">Report</button>
+        <button id="btn-repeat" class="choice-btn pixel">Repeat</button>
+      </div>
+
+      <div id="finalMessage" class="final-message pixel">
+        YOUR WORDS MATTER. REPORT, DON'T REPEAT.
+      </div>
+      <div id="finalSub" class="final-sub">
+        Anonymity is not invisibility. Someone always feels the impact.
+      </div>
+
+      <div id="warningNote" class="warning-note">
+        Choosing repeat doesn't just keep the harm alive — it makes you part of it.
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Report / Repeat 버튼
+  const btnReport = document.getElementById("btn-report");
+  const btnRepeat = document.getElementById("btn-repeat");
+  const finalMessage = document.getElementById("finalMessage");
+  const finalSub = document.getElementById("finalSub");
+  const warningNote = document.getElementById("warningNote");
+
+  btnReport.addEventListener("click", () => {
+    finalMessage.classList.add("visible");
+    finalSub.classList.add("visible");
+    warningNote.classList.remove("visible");
+  });
+
+  btnRepeat.addEventListener("click", () => {
+    warningNote.classList.add("visible");
+    btnRepeat.style.transform = "translateX(-2px)";
+    setTimeout(() => {
+      btnRepeat.style.transform = "translateX(0)";
+    }, 120);
+  });
+
+  // Intro에서 입력한 댓글을 Chaos 섹션에 추가
+  const userInput = document.getElementById("userComment");
+  const sendBtn = document.getElementById("sendComment");
+  const chaosGrid = document.getElementById("chaosGrid");
+  const commentShape = chaosGrid.querySelector(".comment-shape");
+
+  function addUserComment() {
+    const text = userInput.value.trim();
+    if (!text) return;
+
+    const chip = document.createElement("div");
+    chip.className = "comment-chip pixel-chip user-chip";
+    chip.textContent = text;
+
+    const startTop = 80 + Math.random() * 20;   // 80% ~ 100%
+    const startLeft = 5 + Math.random() * 90;   // 5% ~ 95%
+
+    chip.style.top = startTop + "%";
+    chip.style.left = startLeft + "%";
+
+    const duration = 4 + Math.random() * 3;     // 4~7초
+    chip.style.animationDuration = duration.toFixed(2) + "s";
+
+    commentShape.appendChild(chip);
+    userInput.value = "";
+  }
+
+  sendBtn.addEventListener("click", addUserComment);
+  userInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") addUserComment();
+  });
+
+  // 페이지 로드 후, 기존 예시 댓글들 속도도 랜덤 부여
+  window.addEventListener("load", () => {
+    const chips = document.querySelectorAll(".comment-shape .comment-chip");
+    chips.forEach(chip => {
+      const duration = 5 + Math.random() * 4; // 5 ~ 9초
+      chip.style.animationDuration = duration.toFixed(2) + "s";
+    });
+  });
+
+  // 실루엣 카드 3D 인터랙션
+  const silhouetteCard = document.getElementById("silhouetteCard");
+
+  if (silhouetteCard) {
+    silhouetteCard.addEventListener("mousemove", (e) => {
+      const rect = silhouetteCard.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const midX = rect.width / 2;
+      const midY = rect.height / 2;
+
+      const rotateX = -((y - midY) / midY) * 6; // 위아래
+      const rotateY = ((x - midX) / midX) * 8;  // 좌우
+
+      silhouetteCard.style.transform =
+        `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      silhouetteCard.classList.add("hovered");
+    });
+
+    silhouetteCard.addEventListener("mouseleave", () => {
+      silhouetteCard.style.transform = "rotateX(0deg) rotateY(0deg)";
+      silhouetteCard.classList.remove("hovered");
+    });
+  }
+</script>
+</body>
+</html>
+
+
+
+   
