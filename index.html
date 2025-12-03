@@ -398,27 +398,50 @@ p.lead {
     0 0 24px rgba(0,0,0,0.9),
     0 0 30px rgba(124,255,79,0.18);
 }
-
-/* 눈 두 개 */
-.real-eye {
+/* 눈 두 개 전체를 가운데에 잡아주는 래퍼 */
+.real-eyes {
   position: absolute;
-  top: 48%;
-  width: 18px;
-  height: 18px;
+  top: 45%;             /* 위아래 위치 */
+  left: 50%;            /* 가운데 정렬 */
+  transform: translateX(-50%);
+  display: flex;
+  gap: 26px;            /* ← 눈 사이 간격! 숫자 키우면 더 벌어짐 */
+}
+
+/* 각각의 눈알 스타일 */
+.real-eye {
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 30% 30%, #ffffff 0%, transparent 45%),
-    radial-gradient(circle at 50% 60%, #000000 0%, #000000 60%, transparent 70%);
-  box-shadow: 0 0 8px rgba(0,0,0,0.7);
+    radial-gradient(circle at 28% 28%, #ffffffcc 0%, #bbbbbb55 20%, #000 75%),
+    radial-gradient(circle at 50% 60%, #000 0%, #000 60%, transparent 80%);
+  box-shadow:
+    0 0 10px rgba(0, 0, 0, 0.5),
+    inset 0 -4px 6px rgba(0,0,0,0.5);
+}
+/* 무표정한 작은 입 */
+.real-mouth {
+  position: absolute;
+  top: 100%;                 /* 위치 조정 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 38px;              /* 입 길이 */
+  height: 6px;              /* 입 두께 */
+  border-radius: 10px;
+  background: radial-gradient(
+    circle at 50% 100%,
+    #000 0%,
+    #222 60%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 4px rgba(0,0,0,0.5),
+    inset 0 -2px 4px rgba(0,0,0,0.5);
+  opacity: 0.9;
 }
 
-.real-eye.left {
-  left: 36%;
-}
 
-.real-eye.right {
-  right: 36%;
-}
 
 /* 아래 악플 텍스트 */
 .real-comment-list {
@@ -557,6 +580,8 @@ button.choice-btn {
   opacity: 1;
   transform: translateY(0);
 }
+
+
   </style>
 </head>
 <body>
@@ -645,8 +670,12 @@ button.choice-btn {
       </div>
       <br>
       <div class="real-face">
-        <div class="real-eye left"></div>
-        <div class="real-eye right"></div>
+        <div class="real-eyes">
+          <div class="real-eye"></div>
+          <div class="real-eye"></div>
+          <div class="real-mouth"></div>
+        </div>
+        
       </div>
       
 
